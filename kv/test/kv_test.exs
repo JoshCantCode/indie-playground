@@ -8,11 +8,11 @@ defmodule KvTest do
   end
 
   test "add value to new KV" do
-    assert Kv.put(5, Kv.new()) == [5]
+    assert Kv.put(Kv.new(), 5) == [5]
   end
 
   test "add value to existing KV" do
-    assert Kv.put(5, [1, 2, 3]) == [5, 1, 2, 3]
+    assert Kv.put([1, 2, 3], 5) == [5, 1, 2, 3]
   end
 
   test "delete value from KV" do
@@ -29,7 +29,7 @@ defmodule KvTest do
     end
 
     test "getting from a KV with only a single item returns said item" do
-      kv = Kv.put(5, Kv.new())
+      kv = Kv.put(Kv.new(), 5)
       assert Kv.get(kv) == 5
     end
 
@@ -37,7 +37,6 @@ defmodule KvTest do
       # learned this from my own experimenting, |> basically replaces the argument needed in functions with the parent, in this Kv.new()
       # therefore theres no need to pass it into Kv.put(item, list)
       # and the same with .delete()
-
       kv =
         Kv.new()
         |> Kv.put(1)
@@ -45,7 +44,7 @@ defmodule KvTest do
         |> Kv.put(3)
         |> Kv.delete()
 
-      assert Kv.get(kv) == [2, 3]
+      assert kv == [2, 1]
     end
   end
 end

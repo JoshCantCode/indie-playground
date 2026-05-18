@@ -25,8 +25,9 @@ defmodule Kv do
      iex> Kv.put(3, [1,2,3])
      [3, 1, 2, 3]
   """
-  @spec put(item(), t()) :: t()
-  def put(item, list) do
+  # edited to fix piping, because piping inserts the value at the first index. should probably do this for all functions if i plan to pipe them :p
+  @spec put(t(), item()) :: t()
+  def put(list, item) do
     [item | list]
   end
 
