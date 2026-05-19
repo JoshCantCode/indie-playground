@@ -3,7 +3,7 @@ defmodule Kv do
   A simple Kv store
   """
   @type item :: any()
-  @type t :: [item()] | []
+  @type t :: [item()]
 
   @doc """
   ## Example
@@ -19,10 +19,10 @@ defmodule Kv do
   @doc """
   ## Put
 
-     iex> Kv.put(3, [])
+     iex> Kv.put([], 3)
      [3]
 
-     iex> Kv.put(3, [1,2,3])
+     iex> Kv.put([1,2,3], 3)
      [3, 1, 2, 3]
   """
   # edited to fix piping, because piping inserts the value at the first index. should probably do this for all functions if i plan to pipe them :p
@@ -54,12 +54,8 @@ defmodule Kv do
 
      iex> Kv.delete([1,2,3])
      [2, 3]
-
-     iex> Kv.delete([])
-     ** (FunctionClauseError) no function clause matching in Kv.delete/1
-
   """
-  # @spec delete(t()) :: t()
+  @spec delete(t()) :: t()
   def delete([_head | tail]) do
     tail
   end
