@@ -46,5 +46,16 @@ defmodule KvTest do
 
       assert kv == [2, 1]
     end
+
+    test "getting from a KV returns the first item" do
+      kv =
+        Kv.new()
+        |> Kv.put(1)
+        |> Kv.put(2)
+        |> Kv.put(3)
+        |> Kv.get()
+
+      assert kv == 3
+    end
   end
 end
