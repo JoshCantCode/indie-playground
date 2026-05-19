@@ -2,8 +2,9 @@ defmodule Kv do
   @moduledoc """
   A simple Kv store
   """
-  @type item :: any()
-  @type t :: [item()]
+  @type key :: any
+  @type value :: any
+  @type t :: list({key(), value()})
 
   @doc """
   ## Example
@@ -19,16 +20,12 @@ defmodule Kv do
   @doc """
   ## Put
 
-     iex> Kv.put([], 3)
-     [3]
-
-     iex> Kv.put([1,2,3], 3)
-     [3, 1, 2, 3]
+     iex> Kv.put([], 3, 4)
+     [{3, 4}]
   """
-  # edited to fix piping, because piping inserts the value at the first index. should probably do this for all functions if i plan to pipe them :p
-  @spec put(t(), item()) :: t()
-  def put(list, item) do
-    [item | list]
+  @spec put(t(), key(), value()) :: t()
+  def put(list, key, value) do
+    [{key, value} | list]
   end
 
   @doc """
@@ -37,26 +34,38 @@ defmodule Kv do
      iex> Kv.get([])
      nil
 
-     iex> Kv.get([1,2,3])
-     1
+     iex> Kv.get([{:a, 2}, {:b,4}], :a)
+     2
   """
-  @spec get(t()) :: item()
+  @spec get(t(), key()) :: value()
   def get([]) do
     nil
   end
 
-  def get([item | _tail]) do
-    item
+  def get(list, key) when is_list(list) do
+    Keyword.get(list, key)
+  end
+
+  @spec get(t(), key(), value()) :: value()
+  def get([], default) do
+    default
+  end
+
+  def get(list, key, default) when is_list(list) do
+    Keyword.get(list, key, default)
   end
 
   @doc """
   ## Delete
 
-     iex> Kv.delete([1,2,3])
-     [2, 3]
+     iex> Kv.delete([{:a,4}], :a)
+     []
+
+     iex> Kv.delete([{:a,4}], :b)
+     [{:a, 4}]
   """
-  @spec delete(t()) :: t()
-  def delete([_head | tail]) do
-    tail
+  @spec delete(t(), key()) :: t()
+  def delete(list, key) when is_list(list) do
+    Keyword.delete(list, key)
   end
 end

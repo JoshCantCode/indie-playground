@@ -1,33 +1,37 @@
 defmodule KvTest do
   use ExUnit.Case, async: true
+  import Kv
+
   doctest Kv
 
-  test "Validate that a new KV is empty" do
-    assert Kv.new() |> Enum.empty?()
+  test "new/0 returns empty set" do
+    assert new() |> Enum.empty?()
   end
 
-  test "Same item is pushed and popped" do
-    k = :rand.uniform(50)
-    assert Kv.new() |> Kv.put(k) |> Kv.get() == k
+  test "get/2 returns value set in preceding put" do
+    k = :a
+    v = 1
+
+    assert new() |> put(k, v) |> get(k) == v
   end
 
-  test "Inserting multiple values doesn't clobber" do
-    k = :rand.uniform(50)
-    kv = Kv.new() |> Kv.put(k) |> Kv.put(k + 1)
-    assert Enum.member?(kv, k)
-    assert Enum.member?(kv, k + 1)
-    assert Enum.count(kv) == 2
+  test "get/3 returns a default if key is not found" do
+    k = :b
+    v = 2
+
+    assert new() |> put(:e, v) |> get(k, :nope) == :nope
   end
 
-  test "delete value from KV" do
-    k = :rand.uniform(50)
-    kv = Kv.new() |> Kv.put(k) |> Kv.put(k + 1)
-    assert Kv.delete(kv) |> Enum.count() == 1
+  test "put/2 overwrites existing value for given key" do
+    k = :c
+    v = 3
+
+    assert new() |> put(k,v) |> put(k, v+1) |> get(k) == v+1
   end
 
-  test "get first value of KV" do
-    k = :rand.uniform(50)
-    kv = Kv.new() |> Kv.put(k) |> Kv.put(k + 1)
-    assert Kv.delete(kv) |> Kv.get() == k
+  test "delete/2 removes key from set" do
+    k = :d
+    v = 4
+    assert new() |> put(k,v) |> delete(k) |> get(k, :nope) == :nope
   end
 end
