@@ -1,61 +1,37 @@
 defmodule KvTest do
-  use ExUnit.Case
-  # disable doctests so i can easily see the tests i make here
-  # doctest Kv
+  use ExUnit.Case, async: true
+  import Kv
 
-  test "create new KV" do
-    assert Kv.new() == []
+  doctest Kv
+
+  test "new/0 returns empty set" do
+    assert new() |> Enum.empty?()
   end
 
-  test "add value to new KV" do
-    assert Kv.put(Kv.new(), 5) == [5]
+  test "get/2 returns value set in preceding put" do
+    k = :a
+    v = 1
+
+    assert new() |> put(k, v) |> get(k) == v
   end
 
-  test "add value to existing KV" do
-    assert Kv.put([1, 2, 3], 5) == [5, 1, 2, 3]
+  test "get/3 returns a default if key is not found" do
+    k = :b
+    v = 2
+
+    assert new() |> put(:e, v) |> get(k, :nope) == :nope
   end
 
-  test "delete value from KV" do
-    assert Kv.delete([1, 2, 3]) == [2, 3]
+  test "put/2 overwrites existing value for given key" do
+    k = :c
+    v = 3
+
+    assert new() |> put(k,v) |> put(k, v+1) |> get(k) == v+1
   end
 
-  test "get first value of KV" do
-    assert Kv.get([1, 2, 3]) == 1
-  end
-
-  describe "independent implementation" do
-    test "new KV is empty" do
-      assert Kv.get(Kv.new()) == nil
-    end
-
-    test "getting from a KV with only a single item returns said item" do
-      kv = Kv.put(Kv.new(), 5)
-      assert Kv.get(kv) == 5
-    end
-
-    test "deleting only removes the most recent item" do
-      # learned this from my own experimenting, |> basically replaces the argument needed in functions with the parent, in this Kv.new()
-      # therefore theres no need to pass it into Kv.put(item, list)
-      # and the same with .delete()
-      kv =
-        Kv.new()
-        |> Kv.put(1)
-        |> Kv.put(2)
-        |> Kv.put(3)
-        |> Kv.delete()
-
-      assert kv == [2, 1]
-    end
-
-    test "getting from a KV returns the first item" do
-      kv =
-        Kv.new()
-        |> Kv.put(1)
-        |> Kv.put(2)
-        |> Kv.put(3)
-        |> Kv.get()
-
-      assert kv == 3
-    end
+  test "delete/2 removes key from set" do
+    k = :d
+    v = 4
+    assert new() |> put(k,v) |> delete(k) |> get(k, :nope) == :nope
   end
 end
