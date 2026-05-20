@@ -18,7 +18,7 @@ defmodule KvBucketTest do
     assert get(:recipe, "eggs") == 2
   end
 
-  test "delete/2 returns value deleted" do
+  test "pop/2 returns deleted value" do
     {:ok, bucket} = start_link([])
 
     a =
@@ -29,5 +29,18 @@ defmodule KvBucketTest do
       |> pop("eggs")
 
     assert a == :a
+  end
+
+  test "delete/2 returns the bucket so its pipeable" do
+    {:ok, bucket} = start_link([])
+
+    a =
+      put(bucket, "eggs", :a)
+      |> put("butter", 1.5)
+      |> put("whisk", true)
+      |> put("temp", 400)
+      |> delete("eggs")
+
+    assert a == bucket
   end
 end

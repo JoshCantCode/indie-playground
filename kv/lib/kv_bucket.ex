@@ -38,7 +38,7 @@ defmodule KvBucket do
   @doc """
   Deletes the value for the given key
 
-  Returns a tuple with the old and new value
+  Returns the deleted value
   """
   def pop(bucket, key) do
     Agent.get_and_update(bucket, &{Kv.get(&1, key), Kv.delete(&1, key)})
