@@ -51,13 +51,14 @@ defmodule Kv do
   ## Delete
 
      iex> Kv.delete(%{a: 4}, :a)
-     %{}
+     {4, %{}}
 
      iex> Kv.delete(%{a: 4}, :b)
-     %{a: 4}
+     %{nil, %{a: 4}}
   """
   @spec delete(t(), key()) :: t()
   def delete(map, key) when is_map(map) do
-    Map.delete(map, key)
+    # get_and_update requires a {old, new} tuple
+    {Map.get(map, key), Map.delete(map, key)}
   end
 end
