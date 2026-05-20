@@ -63,6 +63,10 @@ defmodule KvBucket do
     {:reply, :ok, state}
   end
 
+  def handle_call({:get, key}, _from, state) do
+    {:reply, Kv.get(state.bucket, key), state}
+  end
+
   def handle_call({:delete, key}, _from, state) do
     {value, state} = pop_in(state.bucket[key])
     broadcast(state, {:delete, key})
