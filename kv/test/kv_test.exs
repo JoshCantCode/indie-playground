@@ -2,7 +2,7 @@ defmodule KvTest do
   use ExUnit.Case, async: true
   import Kv
 
-  # doctest Kv
+  doctest Kv
 
   test "new/0 returns empty set" do
     assert new() |> Enum.empty?()
