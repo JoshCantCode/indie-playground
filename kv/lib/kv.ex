@@ -58,6 +58,6 @@ defmodule Kv do
   """
   @spec delete(t(), key()) :: t()
   def delete(map, key) when is_map(map) do
-    {Map.get(map, key), Map.delete(map, key)}
+    Map.delete(map, key)
   end
 end
