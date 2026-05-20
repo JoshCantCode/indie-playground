@@ -4,7 +4,7 @@ defmodule Kv do
   """
   @type key :: any
   @type value :: any
-  @type t :: list({key(), value()})
+  @type t :: map()
 
   @doc """
   ## Example
@@ -14,7 +14,7 @@ defmodule Kv do
   """
   @spec new() :: t()
   def new do
-    []
+    %{}
   end
 
   @doc """
@@ -25,7 +25,7 @@ defmodule Kv do
   """
   @spec put(t(), key(), value()) :: t()
   def put(list, key, value) do
-    [{key, value} | list]
+    Map.put(list, key, value)
   end
 
   @doc """
@@ -38,21 +38,21 @@ defmodule Kv do
      2
   """
   @spec get(t(), key()) :: value()
-  def get([]) do
+  def get(%{}) do
     nil
   end
 
-  def get(list, key) when is_list(list) do
-    Keyword.get(list, key)
+  def get(list, key) when is_map(list) do
+    Map.get(list, key)
   end
 
   @spec get(t(), key(), value()) :: value()
-  def get([], default) do
-    default
+  def get(map, key, default) do
+    Map.get(map, :a, default)
   end
 
-  def get(list, key, default) when is_list(list) do
-    Keyword.get(list, key, default)
+  def get(%{}, default) do
+    Map.get(%{}, :a, default)
   end
 
   @doc """
@@ -65,7 +65,7 @@ defmodule Kv do
      [{:a, 4}]
   """
   @spec delete(t(), key()) :: t()
-  def delete(list, key) when is_list(list) do
-    Keyword.delete(list, key)
+  def delete(list, key) when is_map(list) do
+    Map.delete(list, key)
   end
 end

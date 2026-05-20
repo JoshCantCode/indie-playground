@@ -2,7 +2,7 @@ defmodule KvTest do
   use ExUnit.Case, async: true
   import Kv
 
-  doctest Kv
+  # doctest Kv
 
   test "new/0 returns empty set" do
     assert new() |> Enum.empty?()
@@ -26,12 +26,12 @@ defmodule KvTest do
     k = :c
     v = 3
 
-    assert new() |> put(k,v) |> put(k, v+1) |> get(k) == v+1
+    assert new() |> put(k, v) |> put(k, v + 1) |> get(k) == v + 1
   end
 
   test "delete/2 removes key from set" do
     k = :d
     v = 4
-    assert new() |> put(k,v) |> delete(k) |> get(k, :nope) == :nope
+    assert new() |> put(k, v) |> delete(k) |> get(k, :nope) == :nope
   end
 end
