@@ -43,4 +43,19 @@ defmodule KvBucketTest do
 
     assert a == bucket
   end
+
+  describe "GenServer:" do
+    # https://hexdocs.pm/elixir/genservers.html#implementing-subscriptions
+    test "subscribes to puts and deletes" do
+      {:ok, bucket} = start_supervised(KvBucket)
+      KvBucket.subscribe(bucket)
+
+      KvBucket.put(bucket, "milk", 3)
+      assert_receive {:put, "milk", 3}
+
+      # Also check it works even from another process
+      spawn(fn -> KvBucket.delete(bucket, "milk") end)
+      assert_receive {:delete, "milk"}
+    end
+  end
 end
